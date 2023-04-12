@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Four Second Game</title>
+</head>
+<body style = "text-align: center">
+<div><br></div>
+<div><br></div>
+<button onclick="toggleButtonText()" style = "font-size: 16px; transform: scale(4)" >Start</button>
+<div><br></div>
+<div><br></div>
+<p id="oneClicktime"></p>
+<p id="averageTimeAllClicks"></p>
+<div id="tableContainer" style="display: none">
+    <table id="clickTable" style="margin:auto">
+        <thead>
+        <tr>
+            <th>Attempt Number</th>
+            <th>Start Time</th>
+            <th>Stop Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+
+
+<script>
+    var timeGoal = 4;
+    var startTime
+    var stopTime
+    var totalTime = 0;
+    var totalClicks = 0;
+    var maxTime
+    var minTime
+    var oneClicktime = document.getElementById('oneClicktime');
+    var averageTimeAllClicks = document.getElementById('averageTimeAllClicks');
+    var clickTableBody = document.querySelector('#clickTable tbody');
+
+    function toggleButtonText() {
+        var button = document.getElementsByTagName('button')[0];
+
+        if (button.textContent === 'Start') {
+            // Start button
+            startTime = new Date().getTime();
+            button.textContent = 'Stop';
+        } else {
+            // Stop button
+            stopTime = new Date().getTime();
+            button.textContent = 'Start';
+            displayTime();
+        }
+    }
+
+    function displayTime() {
+        var timeDifferenceFirstClick = stopTime - startTime;
+        var time = timeDifferenceFirstClick / 1000;
+        totalTime += time;
+        totalClicks++;
+        // Calculate max time and min time
+        if (totalClicks === 1) {
+            maxTime = time;
+            minTime = time;
+        } else {
+            maxTime = Math.max(maxTime, time);
+            minTime = Math.min(minTime, time);
+        }
+
+        averageTimeAllClicks.textContent = 'Average time: ' + (totalTime / totalClicks) + ' seconds.' + ' Maximum Time: ' + maxTime + ' Minimum Time:  ' + minTime + ' total attempts: ' + totalClicks;
+        oneClicktime.textContent = 'Elapsed time: ' + time + ' seconds.';
+
+
+        var clickButton = document.getElementsByTagName('button')[0];
+        var differenceFromTime = Math.abs(time - timeGoal);
+        //make button blue if the difference is within .2
+        if (differenceFromTime <= 0.2) {
+            clickButton.style.backgroundColor = 'blue';
+        }
+        //make button yellow if the difference is within .5
+        else if (differenceFromTime <= 0.5) {
+            clickButton.style.backgroundColor = 'yellow';
+        }
+        //make button blue if the difference is 0
+        else if (time === timeGoal) {
+            clickButton.style.backgroundColor = 'green';
+        }
+        //make button red if the difference is more than .5
+        else {
+            clickButton.style.backgroundColor = 'red';
+        }
+
+        //Add row to the table
+        var tableBody;
+        if (document.getElementById('clickTable').style.display === 'none') {
+            // will add to talb
+            tableBody = document.getElementById('hiddenClickTableBody');
+        } else {
+            // table is visible
+            tableBody = clickTableBody;
+        }
+        //adds to the summary table
+        var row = tableBody.insertRow();
+        var attemptNumberCell = row.insertCell(0);
+        var startTimeCell = row.insertCell(1);
+        var stopTimeCell = row.insertCell(2);
+        attemptNumberCell.textContent = totalClicks;
+        startTimeCell.textContent = new Date(startTime).toLocaleTimeString();
+        stopTimeCell.textContent = new Date(stopTime).toLocaleTimeString();
+
+    }
+
+    //allows the user to toggle the table
+    function toggleTableVisibility() {
+        var tableContainer = document.getElementById('tableContainer');
+        tableContainer.style.display = tableContainer.style.display === 'none' ? '' : 'none';
+    }
+</script>
+<button onclick="toggleTableVisibility()">Table for a summary of each attempt's result </button>
+</body>
+</html>
