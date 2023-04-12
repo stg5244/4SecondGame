@@ -69,7 +69,7 @@
             minTime = Math.min(minTime, time);
         }
 
-        averageTimeAllClicks.textContent = 'Average time: ' + (totalTime / totalClicks) + ' seconds.' + ' Maximum Time: ' + maxTime + ' Minimum Time:  ' + minTime + ' total attempts: ' + totalClicks;
+        averageTimeAllClicks.textContent = 'Average time: ' + (totalTime / totalClicks).toFixed(3) + ' seconds.' + ' Maximum Time: ' + maxTime + ' Minimum Time:  ' + minTime + ' total attempts: ' + totalClicks;
         oneClicktime.textContent = 'Elapsed time: ' + time + ' seconds.';
 
 
